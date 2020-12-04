@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: IG60 Bt510 Demo Lambda
+Parameters:
+  BucketName:
+    Type: String
+  ObjectKey:
+    Type: String
+  Environment:
+    Type: String
+
+Resources:
+  Bt510DemoFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: !Join ["_", ["Bt510DemoFunction", !Ref Environment]]
+      Code:
+        S3Bucket: !Ref BucketName
+        S3Key: !Ref ObjectKey
+      Handler: lambda_function.function_handler
+      Role: arn:aws:iam::535625058381:role/lambda_basic_execution
+      Runtime: python3.7
+      Environment:
+        Variables:
+          Environment: !Ref Environment
+      Tags:
+        - Key: Resource Group
+          Value: Bluegrass
+        - Key: Product
+          Value: IG60
+
+  Bt510DemoFunctionVersion:
+    Type: AWS::Lambda::Version
+    DependsOn: Bt510DemoFunction
+    Properties:
+      Description: Latest Version
+      FunctionName: !Ref Bt510DemoFunction
+
+  Bt510DemoFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: Bt510DemoFunction
+    Properties:
+      RetentionInDays: 14
+      LogGroupName: !Join ["", ["/aws/lambda/", !Ref Bt510DemoFunction]]
+
+Outputs:
+  Bt510DemoFunctionArn:
+    Value: !Ref Bt510DemoFunctionVersion

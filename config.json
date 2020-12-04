@@ -1,0 +1,10 @@
+{
+  "config_onetime": {
+    "scale": 2,
+    "odr": 5,
+    "activationThreshold": 8,
+    "temperatureSenseInterval": 120,
+    "batterySenseInterval": 3600,
+    "configVersion": 1
+  }
+}
